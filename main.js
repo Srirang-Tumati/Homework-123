@@ -1,49 +1,25 @@
-x=0;
-y=0;
-draw_circle="";
-draw_rect="";
+    function setup() {
+        video = createCapture(VIDEO);
+        video.size(550, 500);
+        
+        canvas = createCanvas(550, 500);
+        canvas.position(560,150);
 
-var SpeechRecognition = window.webkitSpeechRecognition();
-
-var Recognition = new SpeechRecognition();
-
-function start(){
-    document.getElementById("status").innerHTML="System Is Listening Please Speak!";
-    Recognition.start();
-}
-
-Recognition.onresult = function(event){
-    console.log(event);
-    var content = event.result[0][0].transcript;
-    document.getElementById("status").innerHTML= "The Speech Has been Recognized As " + content;
-    if(content=="circle"){
-        x=Math.floor(Math.random()*900);
-        y=Math.floor(Math.random()*600);
-        document.getElementById("status").innerHTML="Started Drawing Circle";
-        draw_circle = "set";
+        poseNet = ml5.poseNet (video, modeloaded);
+        poseNet.on('pose', gotPoses);
     }
-    if(content=="rectangle"){
-        x=Math.floor(Math.random()*900);
-        y=Math.floor(Math.random()*600);
-        document.getElementById("status").innerHTML="Started Drawing Rectangle";
-        draw_rect = "set";
-    }
-}
 
-function setup(){
-    canvas = createCanvas(900,600);
-}
+    function draw() {
+        background("#87CEEB");
+    }
 
-function draw(){
-    if(draw_circle=="set"){
-        radius = Math.floor(Math.random()*100);
-        circle(x,y,radius);
-        document.getElementById("status").innerHTML= "Circle Is Drawn";
-        draw_circle = "";
+    function modeloaded() {
+        console.log('PoseNet Is Initialized! ');
     }
-    if(draw_rect=="set"){
-        rectangle(x,y,70,50);
-        document.getElementById("status").innerHTML= "Rectangle Is Drawn";
-        draw_rectangle = "";
+
+    function gotPoses() {
+        if(results.length > 0)
+        {
+            console.log(results);
+        }
     }
-}
